@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--窗口宽度是设备宽度，缩放比例是1:1-->
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Bootstrap HelloWorld</title>
+
+    <!-- Bootstrap -->
+    <link href="../dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+
+    <style>
+        body {
+            background-image: url('../static/img/index-bkg1.jpg');
+            background-size: cover;
+        }
+
+        .iconmargin {
+            margin-top: 12px;
+        }
+
+        .boxborder {
+            border: 1px solid rosybrown;
+
+        }
+
+        .input-bgc {
+            background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+        }
+
+        .box {
+            height: 400px;
+            width: 500px;
+            border: 2px solid rgba(0, 0, 0, 0);
+            border-radius: 10px;
+            margin-top: 100px;
+            /* background-image: linear-gradient(to top, #dfe9f3 0%, white 100%); */
+
+        }
+
+        .formbox {
+            margin-top: 20px;
+        }
+    </style>
+
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="../dist/js/jquery-3.4.1.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="../dist/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+
+    <script>
+        $.get({
+            url:"/admin/gettype",
+            data:{},
+            dataType: "JSON",
+            success:function (data) {
+                if (data === '1') {
+                    $('#title').text('学生注册');
+                    $('#changeBtn').text('切换管理员注册');
+
+                }
+                else{
+                    $('#title').text('管理员注册');
+                    $('#changeBtn').text('切换学生注册');
+                    //移除院系，学号的输入
+                    var input = $('#faculty')
+                    input.remove();
+                    input = $('#stuID');
+                    input.remove();
+                    //把班级的输入修改属性改成管理员身份输入
+                    input = $('#inputClass');
+                    input.attr('placeholder','管理员身份');
+                    input = $('#class>span');
+                    input.removeClass('glyphicon glyphicon-calendar');
+                    input.addClass('glyphicon glyphicon-lock')
+
+                }
+            }
+        });
+    </script>
+
+    <div class="container box">
+        <div class="row">
+            <h2 class="text-center " id="title">学生注册</h2>
+
+            <form id="test-form" class="form-horizontal formbox " method="post">
+                <!-- 姓名 输入 -->
+                <div class="form-group " id="name">
+                    <span class="iconmargin  glyphicon glyphicon-user col-sm-1 col-sm-offset-1"
+                        aria-hidden="true"></span>
+                    <div class="col-sm-8 ">
+                        <input type="text" class="form-control input-bgc" id="inputName" placeholder="姓名" name="name">
+                    </div>
+                </div>
+
+                <!-- 学号 -->
+                <div class="form-group " id="stuID">
+                    <span class="iconmargin  glyphicon glyphicon-star-empty col-sm-1 col-sm-offset-1"
+                        aria-hidden="true"></span>
+
+                    <div class="col-sm-8 ">
+                        <input type="text" class="form-control input-bgc" id="inputStuID" placeholder="学号" name="stuID" onblur="checkStuID()">
+                    </div>
+
+                    <div id="stuidMsg">
+
+                    </div>
+                </div>
+
+                <!-- 院系 -->
+                <div class="form-group " id="faculty">
+                    <span class="iconmargin  glyphicon glyphicon-home col-sm-1 col-sm-offset-1"
+                        aria-hidden="true"></span>
+                    <div class="col-sm-8 ">
+                        <input type="text" class="form-control input-bgc" id="inputFaculty" placeholder="院系" name="faculty">
+                    </div>
+                </div>
+
+                <!-- 班级 -->
+                <div class="form-group " id="class">
+                    <span class="iconmargin  glyphicon glyphicon-calendar col-sm-1 col-sm-offset-1"
+                        aria-hidden="true"></span>
+                    <div class="col-sm-8 ">
+                        <input type="text" class="form-control input-bgc" id="inputClass" placeholder="班级" name="class">
+                    </div>
+                </div>
+
+                <!-- 手机号 -->
+                <div class="form-group " id="phone">
+                    <span class="iconmargin  glyphicon glyphicon-phone col-sm-1 col-sm-offset-1"
+                        aria-hidden="true"></span>
+                    <div class="col-sm-8 ">
+                        <input type="text" class="form-control input-bgc" id="inputPhone" placeholder="手机号"
+                            name="phone">
+                    </div>
+                </div>
+
+                <div class="form-group text-center">
+                    <button type="button" class="btn btn-success col-sm-4 col-sm-offset-4"
+                        onclick="checkForm()">注册</button>
+                </div>
+                <div class="form-group text-center">
+                    <button id="changeBtn" type="button" class="btn btn-info col-sm-4 col-sm-offset-4"
+                        onclick="changeType()">切换管理员注册</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+        function checkStuID(){
+            var stuid = $("#inputStuID").val();//获取学号
+            var stuidmsg = $('#stuidMsg')//获取注册学号的msg信息
+            if(stuid != '' || !reg.test(email)){
+                $.post({
+                    url: "/admin/check",
+                    data: {'stuid': stuid},
+                    dataType: "JSON",
+                    success: function (data) {
+                        //用户已存在
+                        if (data.code === 210){
+                            stuidmsg.html('<p>用户已存在</p>');
+                            $('#stuidMsg p').css('color','red');
+                        }
+                        else
+                            stuidmsg.html('<span class="iconmargin  glyphicon glyphicon-ok col-sm-1" aria-hidden="true"></span>');
+
+                    },
+                    error: function () {
+                        alert('服务器错误')
+                    }
+                });
+            }
+        }
+        function changeType(type){
+            $.get({
+                url:"/admin/gettype",
+                data:{},
+                dataType: "JSON",
+                success:function (data) {
+                    if (data === '1') {
+                        $.get({
+                            url:"/admin/settype",
+                            data:{'type':2},
+                            success:function (data) {
+                                window.location.href = "/admin/toregister";
+                            }
+                        });
+                    }
+                    else{
+                        $.get({
+                            url:"/admin/settype",
+                            data:{'type':1},
+                            success:function (data) {
+                                window.location.href = "/admin/toregister";
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        function errorSubmit() {
+            window.location.href = "/admin/tologin";
+        }
+        function rightPost(username, password) {
+            $.post({
+                url: "/admin/login",
+                data: { 'username': username, 'password': password },
+                dataType: "JSON",
+                success: function (data) {
+                    if (data.code == 200) {
+                        alert(data.msg);
+                    } else {
+                        window.location.href = "/admin/toabout";
+                    }
+                }
+            });
+        }
+
+        //响应form表单本身的obsubmit事件(按回车或者点击button)
+        function checkForm() {
+            var stuName = $("#inputName").val();
+            var stuid = $("#inputStuID").val();
+            var faculty = $("#inputFaculty").val();
+            var stuClass = $("#inputClass").val();
+            var phone = $("#inputPhone").val();
+            $.post({
+                url: "/admin/register",
+                data: { 'stuName': stuName,
+                        'stuid': stuid ,
+                        'faculty': faculty ,
+                        'stuClass': stuClass ,
+                        'phone': phone
+                },
+                success: function () {
+                    window.location.href = "/admin/tologin";
+                },
+                error: function () {
+                    alert('服务器错误')
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>

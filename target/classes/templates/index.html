@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--窗口宽度是设备宽度，缩放比例是1:1-->
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Bootstrap HelloWorld</title>
+    <!-- 图标-->
+    <link rel="shortcut icon" href="http://202.114.190.75/img/icon/favicon.ico" type="image/x-icon">
+    <!-- Bootstrap -->
+    <link href="dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script type="text/javascript" src="dist/js/jquery-3.4.1.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script type="text/javascript" src="dist/js/bootstrap.min.js"></script>
+
+    <style>
+        body {
+            /* background-image: url("img/index-bkg1.jpg"); */
+            background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .loginbox {
+            text-align: center;
+            height: 300px;
+            line-height: 300px;
+            background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+            border-radius: 30px;
+            border: 1px solid black;
+        }
+
+        .loginposi {
+            margin: 200px auto;
+            font-size: 26px;
+        }
+
+        .titleBox {
+            text-align: center;
+            height: 50px;
+            line-height: 50px;
+            background-image: linear-gradient(to top, #fddb92 0%, #d1fdff 100%);
+            border-radius: 10px;
+            border: 1px solid black;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container ">
+        <div class="row">
+            <h1 class="col-md-12 titleBox">后勤管理系统</h1>
+        </div>
+
+        <div class="row loginposi">
+            <button class="col-md-3 col-md-offset-2 loginbox" type="button" onclick="toSubmit(1)">学生登录</button>
+            <button class="col-md-3 col-md-offset-2 loginbox" type="button" onclick="toSubmit(2)">管理员登录</button>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * 点击用户登录发送ajax请求设定用户类型type
+         * @param type
+         */
+        function toSubmit(type){
+            $.get({
+                url:"/admin/settype",
+                data:{'type':type},
+                success:function (data) {
+                    window.location.href = "/admin/tologin";
+                }
+            });
+        }
+    </script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--窗口宽度是设备宽度，缩放比例是1:1-->
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>登录页面</title>
+    <!-- 图标-->
+    <link rel="shortcut icon" href="http://202.114.190.75/img/icon/favicon.ico" type="image/x-icon">
+    <!-- Bootstrap -->
+    <link href="../dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script type="text/javascript" src="../dist/js/jquery-3.4.1.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script type="text/javascript" src="../dist/js/bootstrap.min.js"></script>
+
+
+    <style>
+        body {
+            background-image: url('../img/login.jpeg');
+            background-size: cover;
+        }
+
+        .iconmargin {
+            margin-top: 12px;
+        }
+
+        .boxborder {
+            border: 1px solid rosybrown;
+        }
+        .loginWordBox{
+            border: 2px solid cornflowerblue;
+            border-radius: 5px;
+            background-image: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+        }
+
+        .input-bgc {
+            background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
+        }
+
+        .btn-bgc {
+            /* background-image: linear-gradient(to right, #243949 0%, #517fa4 100%); */
+        }
+
+        .box {
+            height: 450px;
+            width: 500px;
+            border: 2px solid darkgrey;
+            border-radius: 10px;
+            margin-top: 100px;
+            /* background-image: linear-gradient(to top, #dfe9f3 0%, white 100%); */
+
+        }
+
+        .formbox {
+            margin: 50px;
+        }
+
+        .shadow{
+            box-shadow: 7px 7px 7px 7px rgba(76, 106, 117, 0.47);
+        }
+    </style>
+
+
+</head>
+
+<body onkeydown="keyDown()">
+
+    <script>
+        $.get({
+            url:"/admin/gettype",
+            data:{},
+            dataType: "JSON",
+            success:function (data) {
+                if (data === '1') {
+                    $('#title').text('学生登录');
+                    $('#changeBtn').text('切换管理员登录');
+                    console.log('type:1');
+                }
+                else{
+                    $('#title').text('管理员登录');
+                    $('#changeBtn').text('切换学生登录');
+                    console.log('type:2');
+                }
+            }
+        });
+    </script>
+
+    <div class="container box">
+        <div class=" row form-group">
+            <button id="changeBtn" type="button" class="btn btn-info col-sm-4"
+                    onclick="changeType()">切换管理员登录</button>
+        </div>
+        <div class="row  formbox loginWordBox">
+            <h2 class="text-center  " id="title">学生登录</h2>
+        </div>
+
+        <div class="row ">
+            <form id="test-form" class="form-horizontal " method="post">
+                <!-- username 输入 -->
+                <div class="form-group ">
+                    <span class="iconmargin  glyphicon glyphicon-user col-sm-1 col-sm-offset-1"
+                        aria-hidden="true"></span>
+                    <!-- <label for="inputUsername" class="col-sm-2 control-label">Username</label> -->
+                    <div class="col-sm-8 ">
+                        <input type="text" class="form-control input-bgc" id="inputUsername" placeholder="Username" name="username" value="" >
+                    </div>
+                </div>
+
+                <!-- password输入 -->
+                <div class="form-group ">
+                    <span class="iconmargin  glyphicon glyphicon-asterisk col-sm-1 col-sm-offset-1"
+                        aria-hidden="true"></span>
+                    <!-- <label for="inputPassword3" class="col-sm-2 control-label">Password</label> -->
+                    <div class="col-sm-8 ">
+                        <input type="password" class="form-control input-bgc" id="inputPassword3" placeholder="Password" name="password">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-8">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="rememberBox" name="remember"> Remember me
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group text-center">
+                    <button id="submitBtn" type="button" class="btn btn-primary col-sm-4 col-sm-offset-4" onclick="checkForm()">登录</button>
+                </div>
+                <div class="form-group text-center">
+                    <button type="button" class="btn btn-primary col-sm-4 col-sm-offset-4" onclick="toRegister()">注册</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+
+    <script>
+
+
+        //读取cookie中的用户信息
+        $(document).ready(function () {
+            // alert('已进入获取cookie');
+            var usernameInput = $('#inputUsername');
+            var passwordInput = $('#inputPassword3');
+            var remember = $("#rememberBox");
+            var strcookie = document.cookie;//获取cookie字符串
+            //username=201810241123; password=123456
+            var arrcookie = strcookie.split("; ");//按‘;’分割cookie字符串: {username=201810241123,password=123456}
+            //遍历匹配
+            for ( var i = 0; i < arrcookie.length; i++) {
+                var arr = arrcookie[i].split("=");//按‘=’分割: {username,201810241123},{password,123456}
+                if(arr[0] === 'username')
+                    usernameInput.val(arr[1]);
+                if(arr[0] === 'password')
+                    passwordInput.val(arr[1]);
+            }
+            remember.checked(true);
+            return "";
+        });
+
+        function changeType(){
+            $.get({
+                url:"/admin/gettype",
+                data:{},
+                dataType: "JSON",
+                success:function (data) {
+                    if (data === '1') {
+                        $.get({
+                            url:"/admin/settype",
+                            data:{'type':2},
+                            success:function () {
+                                $('#title').text('管理员登录');
+                                $('#changeBtn').text('切换学生登录');
+                                console.log('type:2');
+                            }
+                        });
+                    }
+                    else{
+                        $.get({
+                            url:"/admin/settype",
+                            data:{'type':1},
+                            success:function () {
+                                $('#title').text('学生登录');
+                                $('#changeBtn').text('切换管理员登录');
+                                console.log('type:1');
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        function toRegister(){
+            window.location.href = "/admin/toregister";
+        }
+        function errorSubmit() {
+            window.location.href = "/admin/tologin";
+        }
+        function rightPost(username, password, remember) {
+            $.ajax({
+                url: "/admin/login",
+                data: { 'username': username, 'password': password, 'remember': remember},
+                dataType: "JSON",
+                success: function (data) {
+                    //登录失败
+                    if (data.code != 100) {
+                        alert(data.msg);
+                    } else {
+                        window.location.href = "/admin/tosstudent";
+                    }
+                } ,
+                error: function (){
+                    alert('服务器错误');
+                }
+            });
+        }
+
+        //响应form表单本身的obsubmit事件(按回车或者点击button)
+        function checkForm() {
+            var username = $("#inputUsername").val();
+            var password = $("#inputPassword3").val();
+            //得到复选框的勾选状态
+            var remember = $("#rememberBox").is(':checked');
+
+            if (username == "" || password == "") {
+                alert("用户名或密码不可为空!");
+                errorSubmit();
+            }
+            else rightPost(username, password,remember);
+        }
+
+        /**
+         * 按下回车键登录
+         */
+        function keyDown() {
+            var theEvent = window.event || arguments.callee.caller.arguments[0]; //谷歌能识别event，火狐识别不了，所以增加了这一句，chrome浏览器可以直接支持event.keyCode
+            var code = theEvent.keyCode;
+            if(code == 13){	//回车键的ASCII值为13
+                document.getElementById("submitBtn").onclick();
+            }
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="schoolservice.mybatis.mapper.RepairEventMapper">
+
+    <resultMap id="eventMap" type="RepairEvent">
+        <result property="updateTime" column="update_time"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <!--增加事件-->
+    <insert id="addRepairEvent" parameterType="RepairEvent"  useGeneratedKeys="true" keyProperty="id">
+        insert into school_service.event(category, detail, sid, place)
+        values (#{category},#{detail},#{sid},#{place});
+    </insert>
+
+    <!--插入更新时间-->
+    <insert id="setUpdateTime">
+        update school_service.event
+        set update_time = #{updateTime}
+        where id = #{eventID};
+    </insert>
+
+    <!--查询所有事件-->
+    <select id="queryEvents" resultMap="eventMap">
+        select e.id, category, state, title, update_time, create_time, sid, place
+        from school_service.event e;
+    </select>
+
+</mapper>

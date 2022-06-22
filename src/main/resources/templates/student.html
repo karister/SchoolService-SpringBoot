@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--窗口宽度是设备宽度，缩放比例是1:1-->
+  <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+  <title>湖北工业大学工程技术学院后勤管理系统</title>
+  <!-- Bootstrap -->
+  <link rel="shortcut icon" href="http://202.114.190.75/img/icon/favicon.ico" type="image/x-icon">
+  <link type="text/css" href="../dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+  <script type="text/javascript" src="../dist/js/jquery-3.4.1.min.js"></script>
+  <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+  <script type="text/javascript" src="../dist/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.1/jquery.form.min.js"></script>
+
+  <style>
+    .header-nav-cl {
+      background-color: rgb(138, 200, 216);
+    }
+
+    .left-nav-cl {
+      background-color: rgb(138, 200, 216);
+      font-size: 18px;
+    }
+
+    .left-nav-box {
+      height: 500px;
+      border-radius: 5px;
+    }
+
+    .dropdown-menu-cl {
+      background-color: rgb(138, 200, 216);
+    }
+
+    .head-nav-brand-ft {
+      font-size: 24px;
+    }
+
+    .img-box {
+      height: 200px;
+      width: 200px;
+      border: 2px solid rgb(138, 200, 216);
+    }
+
+    .border {
+      /*border: 1px solid rgb(224, 34, 0);*/
+    }
+  </style>
+
+
+
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="row">
+
+      <!-- 导航栏 -->
+      <nav class="navbar navbar-default">
+        <div class="container-fluid header-nav-cl">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand head-nav-brand-ft" href="#">湖北工业大学工程技术学院后勤管理系统</a>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+              <!-- <li><a href="#">Link</a></li> -->
+
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false">关于我的 <span class="caret"></span></a>
+                <ul class="dropdown-menu dropdown-menu-cl">
+                  <li><a href="#">我的信息</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">账户管理</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">设置</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="/admin/logout">退出账户</a></li>
+                </ul>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <!-- <li><a href="#">Link1</a></li>
+            <li><a href="#">Link2</a></li> -->
+            </ul>
+
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+      </nav>
+
+      <!-- 巨幕 -->
+      <!-- <div class="jumbotron">
+        <h1>Hello, world!</h1>
+        <p>...</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+      </div> -->
+
+      <!-- 左侧导航栏 -->
+      <ul class="nav nav-pills nav-stacked col-md-2 left-nav-box border">
+        <li role="presentation "><a class="text-center left-nav-cl" href="/admin/torepair">宿舍报修</a></li><br><br>
+        <li role="presentation "><a class="text-center left-nav-cl" href="#">水电管理</a></li><br><br>
+        <li role="presentation "><a class="text-center left-nav-cl" href="#">活动场所预约</a></li><br><br>
+        <li role="presentation "><a class="text-center left-nav-cl" href="#">图书馆选座</a></li>
+      </ul>
+
+      <!-- 头像框 -->
+      <div class="border col-md-4 col-md-offset-3">
+        <div class="border col-md-8">
+          <img id="testImg" src=""  alt="图片" class="img-circle img-box border" />
+        </div>
+        <div class="border col-md-4" style="margin-top: 170px">
+          <form id="form" enctype="multipart/form-data">
+            <input type="button" value="上传头像" onclick="javascript:$('input[name=\'file\']').click();" />
+            <!--    <input name="fileName" readonly />-->
+            <input type="file" id="upload" name="file" style="display: none;" onchange="javascript:$('input[name=\'fileName\']').val(this.files[0].name);"/>
+          </form>
+        </div>
+      </div>
+
+      <!-- 右侧个人信息列表 -->
+      <div class="col-md-3 border">
+        <table class="table table-hover" style="border: 2px solid rgb(138, 200, 216);">
+          <tr class="active">
+            <td>姓名：</td>
+            <td th:text="${session.student.getName()}"></td>
+          </tr>
+          <tr class="active">
+            <td>学号：</td>
+            <td th:text="${session.student.getId()}"></td>
+          </tr>
+          <tr class="active">
+            <td>班级：</td>
+            <td th:text="${session.student.getStuClass()}"></td>
+          </tr>
+          <tr class="active">
+            <td>系别：</td>
+            <td th:text="${session.student.getFaculty()}"></td>
+          </tr>
+          <tr class="active">
+            <td>联系电话：</td>
+            <td th:text="${session.student.getPhone()}"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</body>
+<script>
+
+    // 获取学生头像路径
+    $.ajax({
+      url: "/upload/profile",
+      type: "GET",
+      // 不指定dataType，就是默认返回text格式，对应后台string类型
+      success: function (data) {
+        //alert(data)
+        // 设置图片地址
+        var imgUrl = data;
+        $("#testImg").attr("src", imgUrl);
+      },
+      error: function () {
+        alert('服务器错误');
+      }
+    });
+
+  /* 文件改变时触发t头像上传 */
+  $('#upload').change(function(){
+    // 设置ajax参数
+    var options = {
+      url : "/upload/profile",
+      type: "POST",
+      success: function (data) {
+        //alert(data)
+        // 设置图片地址
+        var imgUrl = data;
+        $("#testImg").attr("src", imgUrl);
+      }
+    }
+    // 提交表单
+    $('#form').ajaxSubmit(options);
+    return false;
+  })
+</script>
+
+</html>

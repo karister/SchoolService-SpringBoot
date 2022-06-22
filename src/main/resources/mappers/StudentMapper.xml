@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="schoolservice.mybatis.mapper.StudentMapper">
+
+    <resultMap id="stuMap" type="Student">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="faculty" column="faculty"/>
+        <result property="stuClass" column="class"/>
+        <result property="userName" column="user_name"/>
+        <result property="userPass" column="user_pass"/>
+        <result property="phone" column="phone"/>
+        <result property="profile" column="profile"/>
+    </resultMap>
+    <!--根据学号查询学生信息-->
+    <select id="getStuInfo" parameterType="String" resultMap="stuMap">
+        select *
+        from school_service.student
+        where id=#{id};
+    </select>
+    <!--增加学生-->
+    <insert id="addStu" parameterType="Student">
+        insert into school_service.student (name,id,faculty,class,phone)
+        values (#{name},#{id},#{faculty},#{stuClass},#{phone});
+    </insert>
+
+    <update id="modifyStuid" parameterType="Student">
+        update school_service.student
+            set user_name = #{id}
+        where id = #{id};
+    </update>
+
+    <select id="queryStuByName" parameterType="String" resultMap="stuMap">
+        select *
+        from school_service.student
+        where user_name = #{userName};
+    </select>
+
+    <select id="queryStuByStuID" parameterType="String" resultMap="stuMap">
+        select *
+        from school_service.student
+        where id = #{id};
+    </select>
+    
+    <update id="modifyProfileByID">
+        update school_service.student
+        set profile = #{profilePath}
+        where id = #{stuid};
+    </update>
+
+
+</mapper>
