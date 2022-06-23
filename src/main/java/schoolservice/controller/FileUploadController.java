@@ -1,12 +1,14 @@
 package schoolservice.controller;
 
-import com.alibaba.fastjson.JSON;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ClassUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import schoolservice.mybatis.entity.Student;
 import schoolservice.service.StudentService;
 
@@ -34,7 +36,7 @@ public class FileUploadController {
         Student student = (Student) session.getAttribute("student");
         //学生上传文件夹建立
         File studentDir = new File(localPath + "/upload/" + student.getId());
-        if (!studentDir.exists()){
+        if (!studentDir.exists()) {
             studentDir.mkdir();
         }
         //上传文件地址
@@ -48,36 +50,30 @@ public class FileUploadController {
     }
 
     @PostMapping("/profile")
-    public String uploadProfileImg(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
-        //获取登录的学生信息
-        Student student = (Student) request.getSession().getAttribute("student");
-        //获取项目classes/static的地址
-        String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
-        String fileName = file.getOriginalFilename();  //获取文件名
-        // 图片存储目录及图片名称
-        String url_path = "images" + File.separator + fileName;
-        //图片保存路径
-        String savePath = staticPath + File.separator + url_path;
-        System.out.println("图片保存地址："+savePath);
-        // 访问路径=静态资源路径+文件目录路径
-        String visitPath ="/" + url_path;
-        System.out.println("图片访问uri："+visitPath);
-        //修改用户头像地址
-        studentService.modifyProfileByID(visitPath, student.getId());
-        File saveFile = new File(savePath);
-        if (!saveFile.exists()){
-            saveFile.mkdirs();
+    public String uploadProfileImg(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException {
+        final String staticPath = ClassUtils.getDefaultClassLoader().getResource("static").getPath();
+        final String folder = "/upload/iamges/";
+        final String uploadPath = staticPath + folder;
+        String fileName = file.getOriginalFilename();
+
+        if (!new File(uploadPath).exists() || new File(uploadPath).mkdirs()) {
+            file.transferTo(new File(uploadPath + fileName));
         }
-        try {
-            file.transferTo(saveFile);  //将临时存储的文件移动到真实存储路径下
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return visitPath;
+
+        String visitUrl = folder + fileName;
+        updateFilePath(request, visitUrl);
+        return visitUrl;
+    }
+
+    private void updateFilePath(HttpServletRequest request, String visitUrl) {
+        final Student student = (Student) request.getSession().getAttribute("student");
+        student.setProfile(visitUrl);
+        request.setAttribute("student", student);
+        studentService.modifyProfileByID(visitUrl, student.getId());
     }
 
     @GetMapping("profile")
-    public String getProfilePath(HttpServletRequest request){
+    public String getProfilePath(HttpServletRequest request) {
         //获取登录的学生信息
         Student student = (Student) request.getSession().getAttribute("student");
         String profile = student.getProfile();
